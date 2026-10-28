@@ -1,0 +1,284 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Student Management</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/StudentManagementSystem.styles.css" asp-append-version="true" />
+
+    <style>
+        :root {
+            --purple: #7139c8;
+            --purple-dark: #51249c;
+            --sidebar-width: 245px;
+            --page-bg: #f7f5fc;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            background: var(--page-bg);
+            color: #302640;
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
+
+        .admin-sidebar {
+            position: fixed;
+            inset: 0 auto 0 0;
+            width: var(--sidebar-width);
+            background: #fff;
+            border-right: 1px solid #eee8f6;
+            padding: 26px 17px;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--purple);
+            text-decoration: none;
+            font-size: 21px;
+            font-weight: 800;
+            padding: 5px 12px 32px;
+        }
+
+        .brand-mark {
+            display: grid;
+            place-items: center;
+            width: 37px;
+            height: 37px;
+            color: white;
+            background: var(--purple);
+            border-radius: 12px;
+        }
+
+        .menu-label {
+            color: #aaa1b9;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 1.3px;
+            padding: 10px 13px;
+        }
+
+        .side-link {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            padding: 13px 14px;
+            margin: 5px 0;
+            border-radius: 11px;
+            color: #777087;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: .2s;
+        }
+
+        .side-link:hover,
+        .side-link.active {
+            color: var(--purple);
+            background: #f1eaff;
+        }
+
+        .side-icon {
+            width: 23px;
+            text-align: center;
+            font-size: 17px;
+        }
+
+        .admin-main {
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+        }
+
+        .admin-topbar {
+            height: 75px;
+            background: #fff;
+            border-bottom: 1px solid #eee8f6;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            padding: 0 32px;
+        }
+
+        .topbar-title {
+            font-weight: 750;
+            font-size: 17px;
+        }
+
+        .admin-profile {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            color: #554b67;
+            font-size: 13px;
+        }
+
+        .profile-avatar {
+            width: 38px;
+            height: 38px;
+            display: grid;
+            place-items: center;
+            background: #eee5ff;
+            color: var(--purple);
+            border-radius: 50%;
+            font-weight: 800;
+        }
+
+        .admin-content {
+            padding: 30px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .admin-footer {
+            padding: 15px 30px;
+            color: #938aa1;
+            font-size: 12px;
+            text-align: center;
+        }
+
+        .mobile-menu {
+            display: none;
+            border: 0;
+            border-radius: 8px;
+            padding: 7px 11px;
+            background: #f1eaff;
+            color: var(--purple);
+            font-size: 20px;
+        }
+
+        @@media (max-width: 800px) {
+            .admin-sidebar {
+                transform: translateX(-100%);
+                transition: transform .25s;
+                box-shadow: 8px 0 25px rgba(40,20,70,.08);
+            }
+
+            .admin-sidebar.open { transform: translateX(0); }
+            .admin-main { margin-left: 0; }
+            .mobile-menu { display: inline-block; }
+            .admin-topbar { padding: 0 16px; }
+            .admin-content { padding: 16px; }
+        }
+    
+/* Screenshot-style sidebar sections */
+.menu-label {
+    margin: 26px 12px 14px !important;
+    color: #a49bb9 !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    letter-spacing: 1.2px !important;
+}
+
+.side-link {
+    display: flex !important;
+    align-items: center !important;
+    gap: 14px !important;
+    margin: 4px 0 !important;
+    padding: 13px 14px !important;
+    border-radius: 9px !important;
+    color: #625777 !important;
+    text-decoration: none !important;
+    font-size: 15px !important;
+    transition: background .2s ease, color .2s ease !important;
+}
+
+.side-link:hover {
+    background: #f3efff !important;
+    color: #7650d5 !important;
+}
+
+.side-icon {
+    display: inline-flex !important;
+    width: 22px !important;
+    justify-content: center !important;
+    align-items: center !important;
+    font-size: 18px !important;
+    flex-shrink: 0 !important;
+}
+</style>
+</head>
+<body>
+    <aside class="admin-sidebar" id="adminSidebar">
+        <a class="brand" asp-controller="Home" asp-action="Index">
+            <span class="brand-mark">S</span>
+            <span>Student<span style="color:#9b7add">Panel</span></span>
+        </a>
+
+        <div class="menu-label">MAIN MENU</div>
+
+        <a class="side-link" asp-controller="Home" asp-action="Index">
+            <span class="side-icon">▦</span> Dashboard
+        </a>
+
+        <a class="side-link" asp-controller="Students" asp-action="Index">
+            <span class="side-icon">♙</span> Students
+        </a>
+
+        <a class="side-link" asp-controller="Students" asp-action="Create">
+            <span class="side-icon">＋</span> Add Student
+        </a>
+
+        <div class="menu-label">MANAGEMENT</div>
+
+        <a class="side-link" asp-controller="Students" asp-action="Index">
+            <span class="side-icon">▤</span> Student Directory
+        </a>
+
+        <a class="side-link" asp-controller="Home" asp-action="Privacy">
+            <span class="side-icon">⚙</span> Settings
+        </a>
+
+        <div class="menu-label">SYSTEM</div>
+
+        <a class="side-link" href="/Students">
+            <span class="side-icon">▣</span> Reports & Records
+        </a>
+    </aside>
+
+    <div class="admin-main">
+        <header class="admin-topbar">
+            <div style="display:flex;align-items:center;gap:14px">
+                <button class="mobile-menu" id="menuToggle" type="button"
+                        aria-label="Toggle menu">☰</button>
+                <span class="topbar-title">@ViewData["Title"]</span>
+            </div>
+
+            <div class="admin-profile">
+                <span style="font-size:19px">♧</span>
+                <span class="profile-avatar">A</span>
+                <span><strong>Admin</strong><br />Student Management</span>
+            </div>
+        </header>
+
+        <main class="admin-content">
+            @RenderBody()
+        </main>
+
+        <footer class="admin-footer">
+            © 2026 Student Management System · Admin Dashboard
+        </footer>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        const menuToggle = document.getElementById("menuToggle");
+        const sidebar = document.getElementById("adminSidebar");
+
+        menuToggle?.addEventListener("click", () => {
+            sidebar.classList.toggle("open");
+        });
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
+

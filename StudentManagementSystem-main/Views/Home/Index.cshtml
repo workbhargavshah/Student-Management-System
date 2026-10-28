@@ -1,0 +1,591 @@
+﻿@{
+    ViewData["Title"] = "Admin Dashboard";
+    var totalStudents = ViewBag.TotalStudents ?? 0;
+    var totalDepartments = ViewBag.TotalDepartments ?? 0;
+    var totalSemesters = ViewBag.TotalSemesters ?? 0;
+    var totalRecords = ViewBag.TotalRecords ?? 0;
+}
+
+<style>
+    .dashboard-page {
+        padding: 28px;
+        font-family: "Segoe UI", sans-serif;
+        background: #f7f5fc;
+        min-height: 80vh;
+        border-radius: 18px;
+    }
+
+    .dashboard-heading {
+        font-size: 30px;
+        font-weight: 750;
+        color: #27213c;
+        margin-bottom: 6px;
+    }
+
+    .dashboard-subtitle {
+        color: #858096;
+        margin-bottom: 28px;
+    }
+
+    .dashboard-cards {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 20px;
+    }
+
+    .dashboard-card {
+        padding: 24px;
+        border-radius: 17px;
+        border: 1px solid rgba(110, 70, 180, .08);
+        box-shadow: 0 7px 22px rgba(55, 35, 90, .06);
+        transition: transform .2s, box-shadow .2s;
+    }
+
+    .dashboard-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 26px rgba(55, 35, 90, .12);
+    }
+
+    .card-purple { background: #eee5ff; }
+    .card-blue { background: #e1f3ff; }
+    .card-orange { background: #fff0e5; }
+    .card-green { background: #e4f9eb; }
+
+    .card-icon {
+        font-size: 29px;
+        margin-bottom: 17px;
+    }
+
+    .card-label {
+        color: #716b82;
+        font-size: 14px;
+        margin-bottom: 9px;
+    }
+
+    .card-number {
+        font-size: 32px;
+        font-weight: 750;
+        color: #29213c;
+        overflow-wrap: anywhere;
+    }
+
+    .card-note {
+        margin-top: 10px;
+        color: #777187;
+        font-size: 12px;
+    }
+
+    .dashboard-section {
+        margin-top: 28px;
+        background: white;
+        padding: 24px;
+        border-radius: 17px;
+        box-shadow: 0 5px 20px rgba(55, 35, 90, .05);
+    }
+
+    .dashboard-section h3 {
+        color: #302640;
+        font-size: 19px;
+        font-weight: 700;
+    }
+
+    .quick-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 18px;
+    }
+
+    .quick-actions a {
+        display: inline-block;
+        padding: 12px 19px;
+        background: #7139c8;
+        color: white;
+        text-decoration: none;
+        border-radius: 10px;
+        font-weight: 600;
+    }
+
+    .quick-actions a:hover {
+        background: #5527a4;
+        color: white;
+    }
+
+    @@media (max-width: 900px) {
+        .dashboard-cards {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+
+    @@media (max-width: 520px) {
+        .dashboard-page { padding: 16px; }
+        .dashboard-cards { grid-template-columns: 1fr; }
+    }
+</style>
+
+<div class="dashboard-page">
+    <h1 class="dashboard-heading">Admin Dashboard</h1>
+    <p class="dashboard-subtitle">
+        Welcome back! Here is your student management overview.
+    </p>
+
+    <div class="dashboard-cards">
+        <div class="dashboard-card card-purple">
+            <div class="card-icon">🎓</div>
+            <div class="card-label">Total Students</div>
+            <div class="card-number">@totalStudents</div>
+            <div class="card-note">Registered students</div>
+        </div>
+
+        <div class="dashboard-card card-blue">
+            <div class="card-icon">🏢</div>
+            <div class="card-label">Departments</div>
+            <div class="card-number">@totalDepartments</div>
+            <div class="card-note">Available departments</div>
+        </div>
+
+        <div class="dashboard-card card-orange">
+            <div class="card-icon">📚</div>
+            <div class="card-label">Semesters</div>
+            <div class="card-number">@totalSemesters</div>
+            <div class="card-note">Active semesters</div>
+        </div>
+
+        <div class="dashboard-card card-green">
+            <div class="card-icon">📊</div>
+            <div class="card-label">Total Records</div>
+            <div class="card-number">@totalRecords</div>
+            <div class="card-note">Student records overview</div>
+        </div>
+    </div>
+
+    <div class="dashboard-section">
+        <h3>Quick Actions</h3>
+        <p class="text-muted">Manage student information from one place.</p>
+        <div class="quick-actions">
+            <a href="/Students">👥 View Students</a>
+            <a href="/Students/Create">➕ Add Student</a>
+        </div>
+    </div>
+</div>
+<style>
+    .dashboard-bottom {
+        display: grid;
+        grid-template-columns: 1fr 1.5fr;
+        gap: 22px;
+        margin-top: 26px;
+    }
+
+    .dashboard-panel {
+        background: #fff;
+        padding: 24px;
+        border-radius: 17px;
+        box-shadow: 0 5px 20px rgba(55,35,90,.06);
+        min-width: 0;
+    }
+
+    .dashboard-panel h3 {
+        font-size: 19px;
+        font-weight: 700;
+        color: #302640;
+        margin-bottom: 20px;
+    }
+
+    .department-row { margin: 18px 0; }
+
+    .department-info {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        font-size: 14px;
+        margin-bottom: 8px;
+        color: #625a73;
+    }
+
+    .department-track {
+        height: 9px;
+        background: #f0edf6;
+        border-radius: 20px;
+        overflow: hidden;
+    }
+
+    .department-fill {
+        height: 100%;
+        border-radius: 20px;
+    }
+
+    .fill-cse { background: #7544d6; }
+    .fill-it { background: #4aa8e8; }
+    .fill-ce { background: #f3a35c; }
+    .fill-other { background: #50bb88; }
+
+    .student-table-wrap { overflow-x: auto; }
+
+    .student-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+    }
+
+    .student-table th {
+        text-align: left;
+        padding: 12px 10px;
+        color: #817990;
+        background: #faf8fd;
+        white-space: nowrap;
+    }
+
+    .student-table td {
+        padding: 14px 10px;
+        border-bottom: 1px solid #f0edf5;
+        color: #4c455a;
+    }
+
+    .student-table tr:last-child td { border-bottom: none; }
+
+    .department-badge {
+        background: #eee5ff;
+        color: #6735b5;
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .empty-students {
+        text-align: center;
+        padding: 24px;
+        color: #8b8498;
+    }
+
+    @@media (max-width: 850px) {
+        .dashboard-bottom { grid-template-columns: 1fr; }
+    }
+</style>
+
+<div class="dashboard-bottom">
+    <section class="dashboard-panel">
+        <h3>Department Overview</h3>
+
+        @{
+            var cseCount = (int)(ViewBag.CSECount ?? 0);
+            var itCount = (int)(ViewBag.ITCount ?? 0);
+            var ceCount = (int)(ViewBag.CECount ?? 0);
+            var otherCount = (int)(ViewBag.OtherCount ?? 0);
+            var chartTotal = Math.Max(cseCount + itCount + ceCount + otherCount, 1);
+        }
+
+        <div class="department-row">
+            <div class="department-info">
+                <span>CSE</span><strong>@cseCount students</strong>
+            </div>
+            <div class="department-track">
+                <div class="department-fill fill-cse"
+                     style="width: @(cseCount * 100.0 / chartTotal)%"></div>
+            </div>
+        </div>
+
+        <div class="department-row">
+            <div class="department-info">
+                <span>IT</span><strong>@itCount students</strong>
+            </div>
+            <div class="department-track">
+                <div class="department-fill fill-it"
+                     style="width: @(itCount * 100.0 / chartTotal)%"></div>
+            </div>
+        </div>
+
+        <div class="department-row">
+            <div class="department-info">
+                <span>CE</span><strong>@ceCount students</strong>
+            </div>
+            <div class="department-track">
+                <div class="department-fill fill-ce"
+                     style="width: @(ceCount * 100.0 / chartTotal)%"></div>
+            </div>
+        </div>
+
+        <div class="department-row">
+            <div class="department-info">
+                <span>Other</span><strong>@otherCount students</strong>
+            </div>
+            <div class="department-track">
+                <div class="department-fill fill-other"
+                     style="width: @(otherCount * 100.0 / chartTotal)%"></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="dashboard-panel">
+        <h3>Recent Students</h3>
+        <div class="student-table-wrap">
+            <table class="student-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Enrollment No.</th>
+                        <th>Department</th>
+                        <th>Semester</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @if (ViewBag.RecentStudents is IEnumerable<StudentManagementSystem.Models.Student> recentStudents
+                    && recentStudents.Any())
+                {
+                    foreach (var student in recentStudents)
+                    {
+                        <tr>
+                            <td>@student.Name</td>
+                            <td>@student.EnrollmentNo</td>
+                            <td><span class="department-badge">@student.Department</span></td>
+                            <td>@student.Semester</td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="4" class="empty-students">
+                            No student records found.
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="quick-actions" style="margin-top:20px">
+            <a href="/Students">View All Students →</a>
+        </div>
+    </section>
+</div>
+
+<style>
+    .analytics-grid {
+        display: grid;
+        grid-template-columns: 1.4fr 1fr;
+        gap: 22px;
+        margin: 24px 0;
+    }
+
+    .analytics-card {
+        background: #fff;
+        border: 1px solid #eee8fb;
+        border-radius: 18px;
+        padding: 24px;
+        box-shadow: 0 5px 22px rgba(70, 40, 120, .05);
+        min-width: 0;
+    }
+
+    .analytics-card h3 {
+        margin: 0 0 8px;
+        color: #30234b;
+        font-size: 19px;
+    }
+
+    .analytics-subtitle {
+        color: #8b8499;
+        font-size: 13px;
+        margin-bottom: 24px;
+    }
+
+    .bar-chart {
+        height: 210px;
+        display: flex;
+        align-items: stretch;
+        justify-content: space-around;
+        gap: 16px;
+        padding: 10px 5px 0;
+        border-bottom: 1px solid #e9e4f1;
+        background: repeating-linear-gradient(
+            to bottom,
+            transparent 0,
+            transparent 49px,
+            #f1edf7 50px
+        );
+    }
+
+    .bar-item {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-end;
+        min-width: 0;
+    }
+
+    .bar-value {
+        font-size: 12px;
+        color: #65528b;
+        font-weight: 700;
+        margin-bottom: 7px;
+    }
+
+    .bar {
+        width: min(42px, 75%);
+        min-height: 4px;
+        border-radius: 8px 8px 0 0;
+        transition: height .3s ease;
+    }
+
+    .bar-cse { background: #7954d9; }
+    .bar-it { background: #a68aef; }
+    .bar-ce { background: #f0a34b; }
+    .bar-other { background: #53b9ad; }
+
+    .bar-label {
+        font-size: 12px;
+        color: #6e667d;
+        padding: 10px 0;
+    }
+
+    .donut-layout {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 24px;
+        padding: 8px 0;
+    }
+
+    .donut {
+        width: 170px;
+        height: 170px;
+        flex-shrink: 0;
+    }
+
+    .donut-legend {
+        display: grid;
+        gap: 14px;
+    }
+
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        color: #665d77;
+        font-size: 13px;
+    }
+
+    .legend-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        flex-shrink: 0;
+    }
+
+    .legend-count {
+        margin-left: auto;
+        padding-left: 10px;
+        font-weight: 700;
+        color: #30234b;
+    }
+
+    @@media (max-width: 850px) {
+        .analytics-grid { grid-template-columns: 1fr; }
+    }
+</style>
+
+@{
+    var analyticsTotal = cseCount + itCount + ceCount + otherCount;
+    var safeTotal = Math.Max(analyticsTotal, 1);
+    var csePercent = cseCount * 100.0 / safeTotal;
+    var itPercent = itCount * 100.0 / safeTotal;
+    var cePercent = ceCount * 100.0 / safeTotal;
+    var otherPercent = otherCount * 100.0 / safeTotal;
+
+    var cseDash = csePercent * 2.51327;
+    var itDash = itPercent * 2.51327;
+    var ceDash = cePercent * 2.51327;
+    var otherDash = otherPercent * 2.51327;
+}
+
+<div class="analytics-grid">
+    <section class="analytics-card">
+        <h3>Department Bar Chart</h3>
+        <div class="analytics-subtitle">Students in each department</div>
+
+        <div class="bar-chart">
+            <div class="bar-item">
+                <span class="bar-value">@cseCount</span>
+                <div class="bar bar-cse"
+                     style="height: @(Math.Max(cseCount * 100.0 / safeTotal, 2))%"></div>
+                <span class="bar-label">CSE</span>
+            </div>
+            <div class="bar-item">
+                <span class="bar-value">@itCount</span>
+                <div class="bar bar-it"
+                     style="height: @(Math.Max(itCount * 100.0 / safeTotal, 2))%"></div>
+                <span class="bar-label">IT</span>
+            </div>
+            <div class="bar-item">
+                <span class="bar-value">@ceCount</span>
+                <div class="bar bar-ce"
+                     style="height: @(Math.Max(ceCount * 100.0 / safeTotal, 2))%"></div>
+                <span class="bar-label">CE</span>
+            </div>
+            <div class="bar-item">
+                <span class="bar-value">@otherCount</span>
+                <div class="bar bar-other"
+                     style="height: @(Math.Max(otherCount * 100.0 / safeTotal, 2))%"></div>
+                <span class="bar-label">Other</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="analytics-card">
+        <h3>Department Distribution</h3>
+        <div class="analytics-subtitle">Student percentage by department</div>
+
+        <div class="donut-layout">
+            <svg class="donut" viewBox="0 0 120 120" role="img"
+                 aria-label="Department distribution donut chart">
+                <circle cx="60" cy="60" r="40" fill="none"
+                        stroke="#f0edf5" stroke-width="15" />
+                <g transform="rotate(-90 60 60)">
+                    <circle cx="60" cy="60" r="40" fill="none"
+                            stroke="#7954d9" stroke-width="15"
+                            stroke-dasharray="@cseDash 251.327"
+                            stroke-dashoffset="0" />
+                    <circle cx="60" cy="60" r="40" fill="none"
+                            stroke="#a68aef" stroke-width="15"
+                            stroke-dasharray="@itDash 251.327"
+                            stroke-dashoffset="@(-cseDash)" />
+                    <circle cx="60" cy="60" r="40" fill="none"
+                            stroke="#f0a34b" stroke-width="15"
+                            stroke-dasharray="@ceDash 251.327"
+                            stroke-dashoffset="@(-(cseDash + itDash))" />
+                    <circle cx="60" cy="60" r="40" fill="none"
+                            stroke="#53b9ad" stroke-width="15"
+                            stroke-dasharray="@otherDash 251.327"
+                            stroke-dashoffset="@(-(cseDash + itDash + ceDash))" />
+                </g>
+                <text x="60" y="56" text-anchor="middle"
+                      font-size="17" font-weight="700" fill="#30234b">
+                    @analyticsTotal
+                </text>
+                <text x="60" y="70" text-anchor="middle"
+                      font-size="8" fill="#8b8499">Students</text>
+            </svg>
+
+            <div class="donut-legend">
+                <div class="legend-item">
+                    <span class="legend-dot" style="background:#7954d9"></span>
+                    CSE <span class="legend-count">@cseCount</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-dot" style="background:#a68aef"></span>
+                    IT <span class="legend-count">@itCount</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-dot" style="background:#f0a34b"></span>
+                    CE <span class="legend-count">@ceCount</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-dot" style="background:#53b9ad"></span>
+                    Other <span class="legend-count">@otherCount</span>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

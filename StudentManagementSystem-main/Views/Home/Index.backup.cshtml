@@ -1,0 +1,170 @@
+﻿@{
+    ViewData["Title"] = "Admin Dashboard";
+    var totalStudents = ViewBag.TotalStudents ?? 0;
+    var totalDepartments = ViewBag.TotalDepartments ?? 0;
+    var totalSemesters = ViewBag.TotalSemesters ?? 0;
+    var totalRecords = ViewBag.TotalRecords ?? 0;
+}
+
+<style>
+    .dashboard-page {
+        padding: 28px;
+        font-family: "Segoe UI", sans-serif;
+        background: #f7f5fc;
+        min-height: 80vh;
+        border-radius: 18px;
+    }
+
+    .dashboard-heading {
+        font-size: 30px;
+        font-weight: 750;
+        color: #27213c;
+        margin-bottom: 6px;
+    }
+
+    .dashboard-subtitle {
+        color: #858096;
+        margin-bottom: 28px;
+    }
+
+    .dashboard-cards {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 20px;
+    }
+
+    .dashboard-card {
+        padding: 24px;
+        border-radius: 17px;
+        border: 1px solid rgba(110, 70, 180, .08);
+        box-shadow: 0 7px 22px rgba(55, 35, 90, .06);
+        transition: transform .2s, box-shadow .2s;
+    }
+
+    .dashboard-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 26px rgba(55, 35, 90, .12);
+    }
+
+    .card-purple { background: #eee5ff; }
+    .card-blue { background: #e1f3ff; }
+    .card-orange { background: #fff0e5; }
+    .card-green { background: #e4f9eb; }
+
+    .card-icon {
+        font-size: 29px;
+        margin-bottom: 17px;
+    }
+
+    .card-label {
+        color: #716b82;
+        font-size: 14px;
+        margin-bottom: 9px;
+    }
+
+    .card-number {
+        font-size: 32px;
+        font-weight: 750;
+        color: #29213c;
+        overflow-wrap: anywhere;
+    }
+
+    .card-note {
+        margin-top: 10px;
+        color: #777187;
+        font-size: 12px;
+    }
+
+    .dashboard-section {
+        margin-top: 28px;
+        background: white;
+        padding: 24px;
+        border-radius: 17px;
+        box-shadow: 0 5px 20px rgba(55, 35, 90, .05);
+    }
+
+    .dashboard-section h3 {
+        color: #302640;
+        font-size: 19px;
+        font-weight: 700;
+    }
+
+    .quick-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 18px;
+    }
+
+    .quick-actions a {
+        display: inline-block;
+        padding: 12px 19px;
+        background: #7139c8;
+        color: white;
+        text-decoration: none;
+        border-radius: 10px;
+        font-weight: 600;
+    }
+
+    .quick-actions a:hover {
+        background: #5527a4;
+        color: white;
+    }
+
+    @@media (max-width: 900px) {
+        .dashboard-cards {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+
+    @@media (max-width: 520px) {
+        .dashboard-page { padding: 16px; }
+        .dashboard-cards { grid-template-columns: 1fr; }
+    }
+</style>
+
+<div class="dashboard-page">
+    <h1 class="dashboard-heading">Admin Dashboard</h1>
+    <p class="dashboard-subtitle">
+        Welcome back! Here is your student management overview.
+    </p>
+
+    <div class="dashboard-cards">
+        <div class="dashboard-card card-purple">
+            <div class="card-icon">🎓</div>
+            <div class="card-label">Total Students</div>
+            <div class="card-number">@totalStudents</div>
+            <div class="card-note">Registered students</div>
+        </div>
+
+        <div class="dashboard-card card-blue">
+            <div class="card-icon">🏢</div>
+            <div class="card-label">Departments</div>
+            <div class="card-number">@totalDepartments</div>
+            <div class="card-note">Available departments</div>
+        </div>
+
+        <div class="dashboard-card card-orange">
+            <div class="card-icon">📚</div>
+            <div class="card-label">Semesters</div>
+            <div class="card-number">@totalSemesters</div>
+            <div class="card-note">Active semesters</div>
+        </div>
+
+        <div class="dashboard-card card-green">
+            <div class="card-icon">📊</div>
+            <div class="card-label">Total Records</div>
+            <div class="card-number">@totalRecords</div>
+            <div class="card-note">Student records overview</div>
+        </div>
+    </div>
+
+    <div class="dashboard-section">
+        <h3>Quick Actions</h3>
+        <p class="text-muted">Manage student information from one place.</p>
+        <div class="quick-actions">
+            <a href="/Students">👥 View Students</a>
+            <a href="/Students/Create">➕ Add Student</a>
+        </div>
+    </div>
+</div>
